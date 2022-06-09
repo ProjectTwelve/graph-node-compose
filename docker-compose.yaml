@@ -1,0 +1,33 @@
+version: "3"
+
+services: 
+  graph-node:
+    image: graphprotocol/graph-node:v0.25.2
+    environment:
+      - ethereum=p12TestNet:archive:https://testnet.p12.games
+      - GRAPH_LOG=debug
+      - GRAPH_ALLOW_NON_DETERMINISTIC_IPFS=true
+      - postgres_host=pgsql
+      - postgres_user=postgres
+      - postgres_pass=example
+      - postgres_db=postgres
+      # Use ipfs which is only accessible to the Intranet
+      - ipfs=https://ipfsapi.p12.games
+    networks: 
+      - thegraph
+    depends_on:
+      - pgsql
+    ports:
+      - 8000:8000
+      - 8020:8020
+
+  pgsql:
+    image: postgres
+    restart: always
+    networks: 
+      - thegraph  
+    environment:
+      POSTGRES_PASSWORD: example
+
+networks:
+  thegraph:
